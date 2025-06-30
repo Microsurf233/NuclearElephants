@@ -1,7 +1,6 @@
-﻿# Nuclear Elephants
+# Nuclear Elephants
 
----
-![A Nuclear Elephant](Assets/Elephant.png)  
+![A Nuclear Elephant](NuclearElephants/Assets/Elephant.png)  
 
 Nuclear Elephants是一款好评如潮(大概)的Windows动态壁纸软件，用充满能量的核能大象为用户赋能。
 
@@ -33,19 +32,13 @@ Nuclear Elephants 开发团队(共1人)注重软件的易用性。
 在添加了合适数量的核能大象之后，您可以关闭主窗口，此时程序不会退出。若要完全关闭Nuclear Elephants，请右击托盘图标，选择 *Exit* 。
 
 ## ScreenShots
-![主窗口](ScreenShots/0.png)  
-![设置面板](ScreenShots/1.png)  
-![托盘图标](ScreenShots/2.png)  
-![Elephants](ScreenShots/3.gif)  
+![主窗口](NuclearElephants/ScreenShots/0.png)  
+![设置面板](NuclearElephants/ScreenShots/1.png)  
+![托盘图标](NuclearElephants/ScreenShots/2.png)  
+![Elephants](NuclearElephants/ScreenShots/3.gif)  
 
 ## 后记
 在开发Nuclear Elephants的过程中，参考了项目[WinWallpaper](https://github.com/Yinmany/WinWallpaper)的部分代码。 
 
 ---
 # 礼赞核能大象 象门🙏
-
-
-
-
-
-
