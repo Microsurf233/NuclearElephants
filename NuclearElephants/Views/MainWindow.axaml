@@ -1,0 +1,190 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:NuclearElephants.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="225"
+        x:Class="NuclearElephants.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/NuclearElephant.ico"
+        Title="NuclearElephants"
+        Closing="Window_OnClosing"
+        d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
+        TransparencyLevelHint="{Binding TransparencyLevel}">
+    <Window.Styles>
+        <Style Selector=":is(Window)[ActualTransparencyLevel=Mica][IsActive=True]">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+    </Window.Styles>
+
+    <SplitView CompactPaneLength="300" DisplayMode="Overlay" IsPaneOpen="{Binding IsPaneOpened}">
+        <SplitView.Pane>
+            <DockPanel VerticalAlignment="Stretch">
+                <StackPanel DockPanel.Dock="Top">
+                    <!--设置-->
+                    <Expander HorizontalAlignment="Stretch">
+                        <Expander.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock HorizontalAlignment="Center">
+                                    <Run FontFamily="avares://NuclearElephants/Assets/#Segoe Fluent Icons"
+                                         Text="&#xE713;" />
+                                    <Run Text=" 设置" />
+                                </TextBlock>
+                            </StackPanel>
+                        </Expander.Header>
+
+                        <StackPanel>
+                            <StackPanel>
+                                <StackPanel.Styles>
+                                    <Style Selector=":is(Control)">
+                                        <Setter Property="Margin" Value="0,0,0,5"></Setter>
+                                    </Style>
+                                </StackPanel.Styles>
+                                <Button Content="重新加载"
+                                        Command="{Binding LoadItemsCommand}" />
+                                <TextBlock VerticalAlignment="Center">
+                                    <Run Text="{Binding ExtraItemsCount}" />
+                                    <Run Text=" 张图片已被加载!" />
+                                </TextBlock>
+                                <TextBlock>
+                                    <Run Text="{Binding ExtraAudiosCount}" />
+                                    <Run Text=" 段音频已被加载!" />
+                                </TextBlock>
+                            </StackPanel>
+                            <!--图片-->
+                            <Expander HorizontalAlignment="Stretch">
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock HorizontalAlignment="Center">
+                                            <Run FontFamily="avares://NuclearElephants/Assets/#Segoe Fluent Icons"
+                                                 Text="&#xEB9F;" />
+                                            <Run Text="图片" />
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <Button Command="{Binding OpenNuclearItemsFolderCommand}"
+                                        Content="打开图片文件夹" />
+                            </Expander>
+                            <!--音频-->
+                            <Expander HorizontalAlignment="Stretch">
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock HorizontalAlignment="Center">
+                                            <Run FontFamily="avares://NuclearElephants/Assets/#Segoe Fluent Icons"
+                                                 Text="&#xEB9F;" />
+                                            <Run Text="音频" />
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Expander.Header>
+                                <Button Command="{Binding OpenAudiosFolderCommand}"
+                                        Content="打开音频文件夹" />
+                            </Expander>
+                        </StackPanel>
+
+                    </Expander>
+                </StackPanel>
+                <Button DockPanel.Dock="Bottom"
+                        HorizontalAlignment="Stretch"
+                        Height="48"
+                        VerticalAlignment="Bottom"
+                        Click="AboutButton_OnClick">
+                    <TextBlock VerticalAlignment="Center">
+                        <Run FontFamily="avares://NuclearElephants/Assets/#Segoe Fluent Icons"
+                             Text="&#xE946;" />
+                        <Run Text=" 关于" />
+                    </TextBlock>
+                    <FlyoutBase.AttachedFlyout>
+                        <Flyout Placement="TopEdgeAlignedLeft">
+                            <StackPanel HorizontalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Image Source="../Assets/Elephant.png" Height="30">
+                                        <Image.Styles>
+                                            <Style Selector="Image">
+                                                <Style.Animations>
+                                                    <Animation IterationCount="INFINITE" Duration="0:0:5">
+                                                        <KeyFrame Cue="0%">
+                                                            <Setter Property="RotateTransform.Angle" Value="0" />
+                                                        </KeyFrame>
+                                                        <KeyFrame Cue="100%">
+                                                            <Setter Property="RotateTransform.Angle" Value="360" />
+                                                        </KeyFrame>
+                                                    </Animation>
+                                                </Style.Animations>
+                                            </Style>
+                                        </Image.Styles>
+                                    </Image>
+                                    <TextBlock Text="Nuclear Elephant v1.3"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                                <HyperlinkButton Content="Microsurf233 @Bilibili"
+                                                 NavigateUri="https://space.bilibili.com/513781331" />
+                            </StackPanel>
+                        </Flyout>
+                    </FlyoutBase.AttachedFlyout>
+                </Button>
+            </DockPanel>
+        </SplitView.Pane>
+
+        <Panel>
+            <Button Command="{Binding SwitchPaneStateCommand}"
+                    Height="40"
+                    Width="40"
+                    Background="Transparent"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top">
+                <TextBlock FontFamily="avares://NuclearElephants/Assets/#Segoe Fluent Icons"
+                           Text="&#xE700;"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+            </Button>
+
+            <Grid Margin="36,40,36,40"
+                  RowDefinitions="Auto,Auto,Auto,Auto,*">
+
+
+                <TextBlock Grid.Row="0"
+                           Text="Welcome to Nuclear Elephants Crop.!"
+                           FontSize="40"
+                           FontWeight="SemiBold" />
+
+                <StackPanel Grid.Row="1"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <Button Content="Buy an elephant"
+                            Command="{Binding AddElephantCommand}" />
+                    <Button Content="Kill all nuclear elephants"
+                            Command="{Binding KillAllElephantsCommand}" />
+                </StackPanel>
+
+                <TextBlock Grid.Row="2">
+                    <Run Text="You own " />
+                    <Run Text="{Binding Elephants.Count}" />
+                    <Run Text=" Nuclear Elephants now!" />
+                </TextBlock>
+
+                <ScrollViewer Grid.Row="3">
+                    <ListBox ItemsSource="{Binding Elephants}"
+                             Background="Transparent">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding Image}" Height="20" />
+                                    <TextBlock VerticalAlignment="Center">
+                                        <Run Text="Nuclear " />
+                                        <Run Text="{Binding Name}" />
+                                        <Run Text="No." />
+                                        <Run Text="{Binding Id}" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </Grid>
+        </Panel>
+
+    </SplitView>
+
+
+</Window>

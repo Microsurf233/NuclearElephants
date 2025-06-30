@@ -1,0 +1,64 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:NuclearElephants.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="NuclearElephants.Views.ElephantWindow"
+        Title="ElephantWindow"
+        WindowState="FullScreen"
+        Icon="/Assets/NuclearElephant.ico"
+        d:DataContext="{d:DesignInstance vm:ElephantWindowViewModel}"
+        x:DataType="vm:ElephantWindowViewModel">
+    <Window.Styles>
+        <Style Selector="Window">
+            <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+            <Setter Property="ExtendClientAreaChromeHints" Value="NoChrome" />
+            <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1" />
+            <Setter Property="SystemDecorations" Value="None" />
+            <Setter Property="CanResize" Value="False" />
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="White" Opacity="0" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+    </Window.Styles>
+    <ItemsControl ItemsSource="{Binding Elephants}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <Canvas>
+                    <Image Source="{Binding Image}"
+                           MinHeight="50"
+                           MaxHeight="300"
+                           Canvas.Top="{Binding PositionY}">
+                        <Image.Styles>
+                            <Style Selector="Image">
+                                <Style.Animations>
+                                    <Animation IterationCount="INFINITE" Duration="0:0:1">
+                                        <KeyFrame Cue="0%">
+                                            <Setter Property="RotateTransform.Angle" Value="0" />
+                                        </KeyFrame>
+                                        <KeyFrame Cue="100%">
+                                            <Setter Property="RotateTransform.Angle" Value="360" />
+                                        </KeyFrame>
+                                    </Animation>
+                                    <Animation IterationCount="INFINITE" Duration="{Binding FlyOverDuration}">
+                                        <KeyFrame Cue="0%">
+                                            <Setter Property="Canvas.Left" Value="-200" />
+                                        </KeyFrame>
+                                        <KeyFrame Cue="100%">
+                                            <Setter Property="Canvas.Left" Value="4000" />
+                                        </KeyFrame>
+                                    </Animation>
+                                </Style.Animations>
+                            </Style>
+                        </Image.Styles>
+                    </Image>
+                </Canvas>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</Window>

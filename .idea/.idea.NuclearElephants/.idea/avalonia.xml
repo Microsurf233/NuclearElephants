@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="NuclearElephants/App.axaml" value="NuclearElephants/NuclearElephants.csproj" />
+        <entry key="NuclearElephants/Views/AboutWindow.axaml" value="NuclearElephants/NuclearElephants.csproj" />
+        <entry key="NuclearElephants/Views/ElephantWindow.axaml" value="NuclearElephants/NuclearElephants.csproj" />
+        <entry key="NuclearElephants/Views/MainWindow.axaml" value="NuclearElephants/NuclearElephants.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

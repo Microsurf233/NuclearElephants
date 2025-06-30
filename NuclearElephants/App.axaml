@@ -1,0 +1,40 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="NuclearElephants.App"
+             xmlns:local="using:NuclearElephants"
+             xmlns:vm="clr-namespace:NuclearElephants.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             RequestedThemeVariant="Default"
+             x:DataType="vm:ApplicationViewModel"
+             d:DataContext="{d:DesignInstance vm:ApplicationViewModel}">
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator />
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+
+    <Application.DataContext>
+        <vm:ApplicationViewModel />
+    </Application.DataContext>
+
+    <TrayIcon.Icons>
+        <TrayIcons>
+            <TrayIcon Icon="/Assets/NuclearElephant.ico"
+                      ToolTipText="管理Nuclear Elephant">
+                <TrayIcon.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Header="打开主窗口"
+                                        Command="{Binding ShowMainWindowCommand}" />
+                        <NativeMenuItemSeparator />
+                        <NativeMenuItem Header="Exit"
+                                        Command="{Binding ExitApplicationCommand}" />
+                    </NativeMenu>
+                </TrayIcon.Menu>
+            </TrayIcon>
+        </TrayIcons>
+    </TrayIcon.Icons>
+</Application>
