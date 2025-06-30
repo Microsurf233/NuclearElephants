@@ -140,7 +140,7 @@
             </Button>
 
             <Grid Margin="36,40,36,40"
-                  RowDefinitions="Auto,Auto,Auto,Auto,*">
+                  RowDefinitions="Auto,Auto,Auto,*">
 
 
                 <TextBlock Grid.Row="0"

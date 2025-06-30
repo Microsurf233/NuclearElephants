@@ -31,4 +31,8 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
         <PackageReference Include="NAudio" Version="2.2.1" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="ScreenShots\" />
+    </ItemGroup>
 </Project>
