@@ -61,7 +61,7 @@
                                             </Style>
                                         </Image.Styles>
                                     </Image>
-                                    <TextBlock Text="Nuclear Elephant v1.3"
+                                    <TextBlock Text="Nuclear Elephant v1.1"
                                                FontWeight="SemiBold"
                                                VerticalAlignment="Center" />
                                 </StackPanel>
