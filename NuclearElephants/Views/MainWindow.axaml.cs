@@ -1,10 +1,11 @@
 using System;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using FluentAvalonia.UI.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using NuclearElephants.ViewModels;
+using static Avalonia.Controls.Primitives.FlyoutBase;
 
 namespace NuclearElephants.Views;
 
@@ -22,11 +23,23 @@ public partial class MainWindow : Window
         e.Cancel = true;
     }
 
-    private void AboutButton_OnClick(object? sender, RoutedEventArgs e)
+    private void NavigationView_OnItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)
     {
-        if (sender is Control ctl)
+        var vm = DataContext as MainWindowViewModel;
+        switch (e.InvokedItem?.ToString())
         {
-            FlyoutBase.ShowAttachedFlyout(ctl);
+            case "Image Folder":
+                vm?.OpenItemsFolderCommand.Execute(null);
+                break;
+            case "Sound Effect Folder":
+                vm?.OpenAudiosFolderCommand.Execute(null);
+                break;
+            case "Refresh External Resources":
+                vm?.LoadItemsCommand.Execute(null);
+                break;
+            case "About":
+                ShowAttachedFlyout(AboutMenuItem);
+                break;
         }
     }
 }

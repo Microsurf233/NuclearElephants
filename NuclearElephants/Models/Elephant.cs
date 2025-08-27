@@ -1,7 +1,6 @@
 ﻿using System;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using Avalonia.Win32.Interop.Automation;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace NuclearElephants.Models;
