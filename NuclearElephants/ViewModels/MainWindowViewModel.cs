@@ -10,6 +10,7 @@ using NuclearElephants.Models;
 using NAudio.Wave;
 using NuclearElephants.Views;
 using MsBox.Avalonia;
+using FluentAvalonia.UI.Controls;
 using NuclearElephants.Utills;
 using NuclearElephants.Helpers;
 
@@ -28,7 +29,6 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty] private int _extraItemsCount;
     [ObservableProperty] private int _extraAudiosCount;
-    [ObservableProperty] private bool _isPaneOpened;
 
     [ObservableProperty]
     private WindowTransparencyLevelCollection _transparencyLevel = new([WindowTransparencyLevel.Mica]);
@@ -41,7 +41,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void OpenNuclearItemsFolder() => _itemsHelper.OpenInFileExplorer();
+    private void OpenItemsFolder() => _itemsHelper.OpenInFileExplorer();
 
     [RelayCommand]
     private void OpenAudiosFolder() => _audiosHelper.OpenInFileExplorer();
@@ -76,10 +76,6 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [RelayCommand]
     private void KillAllElephants() => Elephants.Clear();
-
-    [RelayCommand]
-    private void SwitchPaneState() => IsPaneOpened = !IsPaneOpened;
-
 
     public MainWindowViewModel()
     {

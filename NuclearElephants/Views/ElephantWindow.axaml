@@ -7,25 +7,15 @@
         x:Class="NuclearElephants.Views.ElephantWindow"
         Title="ElephantWindow"
         WindowState="FullScreen"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        SystemDecorations="None"
+        CanResize="False"
         Icon="/Assets/NuclearElephant.ico"
         d:DataContext="{d:DesignInstance vm:ElephantWindowViewModel}"
         x:DataType="vm:ElephantWindowViewModel">
-    <Window.Styles>
-        <Style Selector="Window">
-            <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
-            <Setter Property="ExtendClientAreaChromeHints" Value="NoChrome" />
-            <Setter Property="ExtendClientAreaTitleBarHeightHint" Value="-1" />
-            <Setter Property="SystemDecorations" Value="None" />
-            <Setter Property="CanResize" Value="False" />
-            <Setter Property="Background">
-                <Setter.Value>
-                    <SolidColorBrush Color="White" Opacity="0" />
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-
-    </Window.Styles>
     <ItemsControl ItemsSource="{Binding Elephants}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
