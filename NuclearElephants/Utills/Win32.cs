@@ -2,8 +2,10 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
 
-// Code from https://github.com/Yinmany/WinWallpaper
+// Reference: https://github.com/Yinmany/WinWallpaper
 namespace NuclearElephants.Utills
 {
     // win32api
@@ -39,8 +41,13 @@ namespace NuclearElephants.Utills
             /// <returns></returns>
             [DllImport("user32.dll")]
             [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
-            public delegate bool EnumWindowsProc(IntPtr hwnd, IntPtr lParam);
+            public static extern bool EnumWindows(EnumWindowProc lpEnumFunc, IntPtr lParam);
+            
+            public delegate bool EnumWindowProc(IntPtr hwnd, IntPtr lParam);
+            
+            [DllImport("user32")]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool EnumChildWindows(IntPtr window, EnumWindowProc callback, IntPtr i);
 
             /// <summary>
             /// 改变指定子窗口的父窗口
@@ -56,7 +63,6 @@ namespace NuclearElephants.Utills
             /// </summary>
             /// <param name="hWnd">窗口句柄</param>
             /// <param name="cmdShow">显示方式</param>
-            /// <returns></returns>
             [DllImport("user32.dll")]  
             public static extern bool ShowWindowAsync(IntPtr hWnd, int cmdShow);
             [DllImport("user32.dll")]
@@ -64,25 +70,7 @@ namespace NuclearElephants.Utills
             public const int SW_SHOW = 5;
             public const int SW_HIDE = 0;
             public const int WS_SHOWNORMAL = 1;
-
-            /// <summary>
-            /// 激活窗口
-            /// </summary>
-            /// <param name="hWnd">激活窗口</param>
-            /// <returns></returns>
-            [DllImport("user32.dll")]
-            public static extern bool SetForegroundWindow(IntPtr hWnd);
-
-            /// <summary>
-            /// 销毁一个窗口
-            /// </summary>
-            /// <param name="hWnd">窗口句柄</param>
-            /// <returns></returns>
-            [DllImport("user32.dll")]
-            public static extern int DestroyWindow(IntPtr hWnd);
-
-           
-
+            
             /// <summary>
             /// 该函数返回指定窗口的边框矩形的尺寸。该尺寸以相对于屏幕坐标左上角的屏幕坐标给出
             /// </summary>
@@ -92,11 +80,17 @@ namespace NuclearElephants.Utills
             public static extern void GetWindowRect(IntPtr hwnd,ref Rectangle rect);
 
             [DllImport("user32.dll")]
-            public static extern void SetWindowPos(IntPtr hWnd,IntPtr hWndlnsertAfter,int x, int y ,int cx,int cy,uint flag);
+            public static extern int SetWindowPos(IntPtr hWnd,IntPtr hWndlnsertAfter,int x, int y ,int cx,int cy,uint flag);
             public const int HWND_TOP = 0; // 在前面
             public const int HWND_BOTTOM = 1; // 在后面
             public const int  HWND_TOPMOST = -1; // 在前面, 位于任何顶部窗口的前面
             public const int HWND_NOTOPMOST = -2; // 在前面, 位于其他顶部窗口的后面}
+            
+            public const uint SWP_NOSIZE     = 0x0001;
+            public const uint SWP_NOMOVE     = 0x0002;
+            public const uint SWP_NOZORDER   = 0x0004;
+            public const uint SWP_NOACTIVATE = 0x0010;
+            public const uint SWP_SHOWWINDOW = 0x0040;
 
 
             [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -111,39 +105,40 @@ namespace NuclearElephants.Utills
                 SMTO_NORMAL = 0,
                 SMTO_NOTIMEOUTIFNOTHUNG = 8
             }
-        }
-        public class Winmm
-        {
-            /// <summary>
-            ///  mciSendString是用来播放多媒体文件的API指令，可以播放MPEG,AVI,WAV,MP3,等等
-            /// </summary>
-            /// <param name="lpszCommand">要发送的命令字符串。字符串结构是:[命令][设备别名][命令参数]</param>
-            /// <param name="lpszReturnString">返回信息的缓冲区,为一指定了大小的字符串变量</param>
-            /// <param name="cchReturn">缓冲区的大小,就是字符变量的长度</param>
-            /// <param name="hwndCallback">回调方式，一般设为零</param>
-            /// <returns>函数执行成功返回零，否则返回错误代码</returns>
-            [DllImport(("winmm.dll "), EntryPoint = "mciSendString", CharSet = CharSet.Auto)]
-            public static extern int mciSendString(string lpszCommand, string lpszReturnString,
-                        uint cchReturn, int hwndCallback);
-        }
+            
 
-        public class Kernel32
-        {
-            /// <summary>
-            /// 获取短路径
-            /// </summary>
-            /// <param name="path">路径</param>
-            /// <param name="short_path">返回短路径的缓冲区</param>
-            /// <param name="short_len">缓冲区长度</param>
-            /// <returns></returns>
-            [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-            public static extern int GetShortPathName(
-                [MarshalAs(UnmanagedType.LPTStr)]string path,
-                [MarshalAs(UnmanagedType.LPTStr)]StringBuilder short_path,
-                int short_len
-                );
-        }
+            [DllImport("user32.dll", SetLastError = true)]
+            public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
+            [DllImport("user32.dll", SetLastError = true)]
+            public static extern long SetWindowLongA(IntPtr hWnd, int nIndex, int dwNewLong);
+            
+            public const int WS_EX_LAYERED = 0x00080000;
+            
+            public const int GWL_EXSTYLE = -20;
+            
+
+
+            /// <summary>
+            /// 设置分层窗口的透明度或颜色键。
+            /// </summary>
+            /// <param name="hWnd">窗口句柄</param>
+            /// <param name="crKey">颜色键（LWA_COLORKEY 时生效）</param>
+            /// <param name="bAlpha">透明度 0-255（LWA_ALPHA 时生效）</param>
+            /// <param name="dwFlags">LWA_* 标志</param>
+            [DllImport("user32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool SetLayeredWindowAttributes(
+                IntPtr hWnd,            
+                uint   crKey,           
+                byte   bAlpha,          
+                uint   dwFlags);        
+            public const uint LWA_COLORKEY = 0x00000001;
+            public const uint LWA_ALPHA    = 0x00000002;
+            
+            [DllImport("user32.dll")]
+            public static extern IntPtr GetDesktopWindow();
+        }
     }
 
 
