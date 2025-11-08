@@ -89,14 +89,7 @@ public partial class MainWindowViewModel : ViewModelBase
         var elephantWindow = App.ServiceProvider.GetRequiredService<ElephantWindow>();
         elephantWindow.Show();
 
-        var child = elephantWindow.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
-        if (child == IntPtr.Zero)
-        {
-            MessageBoxManager.GetMessageBoxStandard("Info", "获取窗口句柄失败。将以其他方式显示Elephants。");
-            return;
-        }
-
-        var parent = WallpaperUtils.GetWorkerW();
-        Win32.User32.SetParent(child, parent);
+        
+        WallpaperUtils.SetWallpaper(elephantWindow);
     }
 }
