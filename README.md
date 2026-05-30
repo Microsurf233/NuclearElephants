@@ -37,8 +37,12 @@ Nuclear Elephants 开发团队(共1人)注重软件的易用性。
 ![托盘图标](NuclearElephants/ScreenShots/2.png)  
 ![Elephants](NuclearElephants/ScreenShots/3.gif)  
 
-## 后记
-在开发Nuclear Elephants的过程中，参考了项目[WinWallpaper](https://github.com/Yinmany/WinWallpaper)的部分代码。 
+## 参考
+在开发Nuclear Elephants的过程中，参考了下面的项目: 
+[WinWallpaper](https://github.com/Yinmany/WinWallpaper)
+[ChromaFlux](https://github.com/xenon2333/ChromaFlux)
+[WinDynamicDesktop](https://github.com/t1m0thyj/WinDynamicDesktop)
+
 
 ---
 # 礼赞核能大象 象门🙏
