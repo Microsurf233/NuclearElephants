@@ -88,8 +88,5 @@ public partial class MainWindowViewModel : ViewModelBase
 
         var elephantWindow = App.ServiceProvider.GetRequiredService<ElephantWindow>();
         elephantWindow.Show();
-
-        
-        WallpaperUtils.SetWallpaper(elephantWindow);
     }
 }
