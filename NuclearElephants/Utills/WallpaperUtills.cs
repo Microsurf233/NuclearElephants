@@ -1,107 +1,72 @@
-﻿using System;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
-using static NuclearElephants.Utills.Win32.User32;
-
-#pragma warning disable CS8625
+using NAudio.Utils;
+using System;
+using System.Runtime.InteropServices;
 
 namespace NuclearElephants.Utills;
 
 public static class WallpaperUtils
 {
+    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    private static extern IntPtr FindWindow(string? lpClassName, string? lpWindowName);
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    private static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter,
+                                                string? lpszClass, string? lpszWindow);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern IntPtr SendMessageTimeout(IntPtr hWnd, uint Msg,
+                                                      IntPtr wParam, IntPtr lParam,
+                                                      uint fuFlags, uint uTimeout,
+                                                      out IntPtr lpdwResult);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+
     /// <summary>
-    /// 获取窗口句柄
+    /// Locates (or spawns) the WorkerW window that sits behind the
+    /// desktop icon layer. Returns IntPtr.Zero on failure.
     /// </summary>
-    public static void SetWallpaper(Window window)
+    public static IntPtr Locate()
     {
-        if (Environment.OSVersion.Version.Build >= 26002)
+        var progman = FindWindow("Progman", null);
+        if (progman == IntPtr.Zero) return IntPtr.Zero;
+        // Tell Progman to make the WorkerW. Spec says timeout 0x0000.
+        // NOTICE: 部分系统不响应无 wParam 和 lParam 的 0x52c 消息(第3,4参数)，导致 WorkerW 无法创建，无法设置壁纸.
+        // 解决方法是将 wParam 设置为 0xD，lParam 设置为 0x1.
+        SendMessageTimeout(progman, 0x052C, 0xd, 0x1, 0x0000, 1000, out _);
+
+        // Walk siblings of Progman looking for the WorkerW that
+        // contains a SHELLDLL_DefView child — the one BEHIND it is
+        // our target.
+        var workerw = FindWindowEx(progman, IntPtr.Zero, "WorkerW", null);
+        var after = IntPtr.Zero;
+        do
         {
-            SetWallpaperNew(window);
-        }
-        else
-        {
-            SetWallpaperOld(window);
-        }
+            after = FindWindowEx(IntPtr.Zero, after, "WorkerW", null);
+            var defview = FindWindowEx(after, IntPtr.Zero, "SHELLDLL_DefView", null);
+            if (defview != IntPtr.Zero)
+            {
+                // The next WorkerW after this one is what we want.
+                workerw = FindWindowEx(IntPtr.Zero, after, "WorkerW", null);
+                break;
+            }
+        } while (after != IntPtr.Zero);
+
+        return workerw;
     }
 
-    private static void SetWallpaperOld(Window window)
+    /// <summary>
+    /// Reparent the given window onto WorkerW so it renders
+    /// below desktop icons.
+    /// </summary>
+    public static bool SetWallpaper(IntPtr ourHwnd)
     {
-        var appWindowHandle = window.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
-        if (appWindowHandle == IntPtr.Zero)
-        {
-            throw new Exception("Failed to get platform handle.");
-        }
-
-        // 获取 Proman
-        var proman = FindWindow("Progman", null);
-
-        // 发送消息 生成 WorkerW
-        SendMessageTimeout(proman, 0x52c, new IntPtr(0), IntPtr.Zero, SendMessageTimeoutFlags.SMTO_NORMAL, 0x3e8, out var zero);
-
-        // 0x52c消息会生成两个WorkerW 所以要枚举不包含“SHELLDLL_DefView”这个的 WorkerW 窗口 隐藏掉。
-        var workerwWithoutDefView = IntPtr.Zero;
-        EnumWindows(EnumWorkerWWithoutDefView, IntPtr.Zero);
-        ShowWindow(workerwWithoutDefView, SW_HIDE);
-
-        // 将选定的壁纸窗口的 Parent 设定为获取到的 Proman
-        SetParent(appWindowHandle, proman);
-        return;
-
-        bool EnumWorkerWWithoutDefView(IntPtr hwnd, IntPtr lParam)
-        {
-            if (FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null) != IntPtr.Zero)
-                workerwWithoutDefView = FindWindowEx(IntPtr.Zero, hwnd, "WorkerW", null);
-            return true;
-        }
-    }
-
-    private static void SetWallpaperNew(Window window)
-    {
-        var appWindowHandle = window.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
-        // 获取 Proman
-        var proman = FindWindow("Progman", null);
-
-        // 发送消息 生成 WorkerW
-        SendMessageTimeout(proman, 0x52c, new IntPtr(0), IntPtr.Zero, SendMessageTimeoutFlags.SMTO_NORMAL, 0x3e8, out var zero);
-        
-        var defView = IntPtr.Zero;
-        EnumChildWindows(proman, (hwnd, lparam) =>
-        {
-            var h = FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
-            if (h == IntPtr.Zero) return true; //继续枚举
-            defView = h;
-            return false; //停止枚举
-        }, IntPtr.Zero);
-        
-        var workerW = IntPtr.Zero;
-        EnumChildWindows(proman, (hwnd, lparam) =>
-        {
-            var h = FindWindowEx(hwnd, IntPtr.Zero, "WorkerW", null);
-            if (h == IntPtr.Zero) return true; //继续枚举
-            workerW = h;
-            return false; //停止枚举
-        }, IntPtr.Zero);
-
-        var msgb = MessageBoxManager.GetMessageBoxStandard("title", $"def:{defView != IntPtr.Zero}\nw:{workerW != IntPtr.Zero}");
-        msgb.ShowWindowAsync();
-        
-        // 设置扩展窗口样式(Layered)
-        SetWindowLongA(appWindowHandle, GWL_EXSTYLE, WS_EX_LAYERED);
-        
-        // 设置透明窗口
-        SetLayeredWindowAttributes(appWindowHandle, 0, 255, LWA_ALPHA);
-        
-        // 设置为 Proman 的子窗口
-        SetParent(appWindowHandle, proman);
-        
-        // 1) 把壁纸窗口插到图标层下方
-        SetWindowPos(appWindowHandle, defView, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-        
-        // 2) 把系统 WorkerW 压到最底
-        SetWindowPos(workerW, appWindowHandle, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-        
-        ShowWindow(appWindowHandle, SW_SHOW);
+        var workerw = Locate();
+        if (workerw == IntPtr.Zero) return false;
+        SetParent(ourHwnd, workerw);
+        return true;
     }
 }
-#pragma warning restore CS8625
