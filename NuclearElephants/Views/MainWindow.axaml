@@ -1,16 +1,13 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:NuclearElephants.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="using:FluentAvalonia.UI.Controls"
-        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="225"
         x:Class="NuclearElephants.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/NuclearElephant.ico"
         Title="NuclearElephants"
         Closing="Window_OnClosing"
-        d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
         TransparencyLevelHint="Mica">
     <Window.Styles>
         <Style Selector=":is(Window)[IsActive=True]">

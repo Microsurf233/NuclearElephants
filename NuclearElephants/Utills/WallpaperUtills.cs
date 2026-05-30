@@ -5,8 +5,6 @@ using NAudio.Utils;
 using System;
 using System.Runtime.InteropServices;
 
-#pragma warning disable CS8625
-
 namespace NuclearElephants.Utills;
 
 public static class WallpaperUtils
@@ -36,7 +34,9 @@ public static class WallpaperUtils
         var progman = FindWindow("Progman", null);
         if (progman == IntPtr.Zero) return IntPtr.Zero;
         // Tell Progman to make the WorkerW. Spec says timeout 0x0000.
-        SendMessageTimeout(progman, 0x052C, IntPtr.Zero, IntPtr.Zero, 0x0000, 1000, out _);
+        // NOTICE: 部分系统不响应无 wParam 和 lParam 的 0x52c 消息(第3,4参数)，导致 WorkerW 无法创建，无法设置壁纸.
+        // 解决方法是将 wParam 设置为 0xD，lParam 设置为 0x1.
+        SendMessageTimeout(progman, 0x052C, 0xd, 0x1, 0x0000, 1000, out _);
 
         // Walk siblings of Progman looking for the WorkerW that
         // contains a SHELLDLL_DefView child — the one BEHIND it is
@@ -70,4 +70,3 @@ public static class WallpaperUtils
         return true;
     }
 }
-#pragma warning restore CS8625
